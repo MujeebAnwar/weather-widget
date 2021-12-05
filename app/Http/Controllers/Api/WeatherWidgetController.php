@@ -14,14 +14,17 @@ class WeatherWidgetController extends Controller
     {
 
         try {
-            $curl = curl_init();
-            $url ='api.openweathermap.org/data/2.5/weather?lat='.$request->latitude.'&lon='.$request->longitude.'&appid=02e0d729f23f89e6e72432b0638c57b2&units=metric';
+            $url ='api.openweathermap.org/data/2.5/weather?lat='.$request->latitude.'&lon='.$request->longitude.'&appid=02e0d729f23f89e6e72432b0638c57b2&units='.$request->measureUnit;
 
             $response = Http::get($url);
 
+            $data = $response->json();
+
+            $data['unit'] = $request->measureUnit =='metric' ? '°C' : '°F';
+
             return response()->json([
                 'status' => true,
-                'data' =>$response->json()
+                'data' =>$data
             ]);
         }catch (\Exception $exception)
         {
