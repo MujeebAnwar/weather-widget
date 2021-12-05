@@ -15,11 +15,8 @@
     <section class="vh-100">
         <div class="container py-5 h-100">
 
-
             <div class="row d-flex justify-content-center align-items-center h-100">
-
                 <div class="col-md-8 col-lg-6 col-xl-4 ">
-
                     <div id="loader">
                         <img id="loading-image"   src="{{asset('loader/loading.gif')}}"/>
                     </div>
@@ -37,7 +34,7 @@
                                     class="form-check-input"
                                     type="radio"
                                     name="inlineRadioOptions"
-                                    id="inlineRadio1"
+                                    id="celsius"
                                     value="metric"
                                     onchange="changeUnit(this)"
                                     checked
@@ -49,7 +46,7 @@
                                     class="form-check-input"
                                     type="radio"
                                     name="inlineRadioOptions"
-                                    id="inlineRadio2"
+                                    id="fahrenheit"
                                     onchange="changeUnit(this)"
                                     value="imperial"
                                 />

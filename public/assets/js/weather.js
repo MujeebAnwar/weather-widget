@@ -24,13 +24,13 @@ function initMap() {
 
 function clickResetButton(lat,long)
 {
-    $('#search_input').val('')
+    $('#search_input').val('');
     $('#loader').removeClass('d-none');
     $('#main-content').addClass('d-none');
     latitude = lat;
     longitude = long;
     measureUnit = 'metric';
-
+    $('#celsius').prop('checked',true)
     getWeatherUpdate(latitude,longitude)
 }
 
