@@ -20,7 +20,7 @@ class WeatherWidgetController extends Controller
 
             $data = $response->json();
 
-            $data['unit'] = $request->measureUnit =='metric' ? '°C' : '°F';
+            $data['unit'] = $request->measureUnit =='metric' ? ' °C' : ' °F';
 
             return response()->json([
                 'status' => true,
