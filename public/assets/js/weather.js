@@ -10,7 +10,6 @@ function initMap() {
     autocomplete.addListener("place_changed", () => {
 
         const place = autocomplete.getPlace();
-
         latitude =place.geometry.location.lat();
         longitude =place.geometry.location.lng()
         $('#loader').removeClass('d-none');

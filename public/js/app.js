@@ -5352,13 +5352,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       weatherType: null,
       icon: null,
       isVisibleLoader: true,
-      isVisibleData: false
+      isVisibleData: false,
+      locationValue: ''
     };
   },
   mounted: function mounted() {
     this.getWeatherUpdate();
+    this.initGoogleMap();
   },
   methods: {
+    // get Weather Data against latitude and longitude
     getWeatherUpdate: function getWeatherUpdate() {
       var _this = this;
 
@@ -5396,10 +5399,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    changeUnit: function changeUnit(event) {
+    // Change Unit Method
+    handleChangeUnit: function handleChangeUnit(event) {
       this.measureUnit = event.target.value;
       this.isVisibleData = false;
       this.getWeatherUpdate();
+    },
+    // Attach google map autocomplete api
+    initGoogleMap: function initGoogleMap() {
+      var _this2 = this;
+
+      var autocomplete = new google.maps.places.Autocomplete(this.$refs["origin"]);
+      autocomplete.addListener("place_changed", function () {
+        var place = autocomplete.getPlace();
+        _this2.latitude = place.geometry.location.lat();
+        _this2.longitude = place.geometry.location.lng();
+        _this2.locationValue = place.formatted_address;
+        _this2.isVisibleData = false;
+
+        _this2.getWeatherUpdate();
+      });
+    },
+    // Handle Reset Button Click
+    handleResetButtonClick: function handleResetButtonClick() {
+      this.latitude = this.currentLatitude;
+      this.longitude = this.currentLongitude;
+      this.measureUnit = 'metric';
+      this.isVisibleData = false;
+      this.locationValue = '';
+      this.measureUnit = 'metric';
+      this.getWeatherUpdate();
+    },
+    // Handle Location Search Box
+    handleInputSearchBox: function handleInputSearchBox(event) {
+      if (!event.target.value) {
+        this.latitude = this.currentLatitude;
+        this.longitude = this.currentLongitude;
+        this.locationValue = '';
+        this.isVisibleData = false;
+        this.getWeatherUpdate();
+      }
     }
   }
 });
@@ -28811,7 +28850,31 @@ var render = function () {
                   _vm._v("Check the weather"),
                 ]),
                 _vm._v(" "),
-                _vm._m(0),
+                _c("div", { staticClass: "input-group rounded mb-3" }, [
+                  _c("input", {
+                    ref: "origin",
+                    staticClass: "form-control rounded",
+                    attrs: {
+                      type: "search",
+                      id: "search_input",
+                      placeholder: "Enter Your Location",
+                      "aria-label": "Search",
+                      "aria-describedby": "search-addon",
+                    },
+                    domProps: { value: _vm.locationValue },
+                    on: { input: _vm.handleInputSearchBox },
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-warning",
+                      attrs: { type: "button", id: "reset" },
+                      on: { click: _vm.handleResetButtonClick },
+                    },
+                    [_vm._v("Reset ")]
+                  ),
+                ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "mb-4 pb-2" }, [
                   _c("div", { staticClass: "form-check form-check-inline" }, [
@@ -28822,9 +28885,9 @@ var render = function () {
                         name: "inlineRadioOptions",
                         id: "celsius",
                         value: "metric",
-                        checked: "",
                       },
-                      on: { change: _vm.changeUnit },
+                      domProps: { checked: _vm.measureUnit == "metric" },
+                      on: { change: _vm.handleChangeUnit },
                     }),
                     _vm._v(" "),
                     _c(
@@ -28846,7 +28909,8 @@ var render = function () {
                         id: "fahrenheit",
                         value: "imperial",
                       },
-                      on: { change: _vm.changeUnit },
+                      domProps: { checked: _vm.measureUnit == "imperial" },
+                      on: { change: _vm.handleChangeUnit },
                     }),
                     _vm._v(" "),
                     _c(
@@ -28927,34 +28991,7 @@ var render = function () {
     ]),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group rounded mb-3" }, [
-      _c("input", {
-        staticClass: "form-control rounded",
-        attrs: {
-          type: "search",
-          id: "search_input",
-          placeholder: "Enter Your Location",
-          "aria-label": "Search",
-          "aria-describedby": "search-addon",
-        },
-      }),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-warning",
-          attrs: { type: "button", id: "reset" },
-        },
-        [_vm._v("Reset ")]
-      ),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

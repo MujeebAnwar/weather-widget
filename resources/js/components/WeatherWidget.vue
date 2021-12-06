@@ -10,11 +10,9 @@
                     <div id="main-content" :class="{'d-none':!isVisibleData}">
                         <h3 class="mb-4 pb-2 fw-normal">Check the weather</h3>
                         <div class="input-group rounded mb-3">
-<!--                            oninput='inputSearchBox(this,"{{$latitude}}","{{$longitude}}")'-->
                             <input type="search"  id="search_input" class="form-control rounded" placeholder="Enter Your Location" aria-label="Search"
-                                   aria-describedby="search-addon" />
-<!--                            onclick='clickResetButton("{{$latitude}}","{{$longitude}}")'-->
-                            <button type="button" class="btn btn-warning" id="reset" >Reset </button>
+                                   aria-describedby="search-addon" @input="handleInputSearchBox" :value="locationValue" ref="origin" />
+                            <button type="button" class="btn btn-warning" @click="handleResetButtonClick" id="reset" >Reset </button>
                         </div>
                         <div class="mb-4 pb-2">
                             <div class="form-check form-check-inline">
@@ -24,8 +22,8 @@
                                     name="inlineRadioOptions"
                                     id="celsius"
                                     value="metric"
-                                    @change="changeUnit"
-                                    checked
+                                    @change="handleChangeUnit"
+                                    :checked="measureUnit == 'metric'"
                                 />
                                 <label class="form-check-label" for="celsius">Celsius</label>
                             </div>
@@ -35,8 +33,10 @@
                                     type="radio"
                                     name="inlineRadioOptions"
                                     id="fahrenheit"
-                                    @change="changeUnit"
+                                    @change="handleChangeUnit"
                                     value="imperial"
+                                    :checked="measureUnit == 'imperial'"
+
                                 />
                                 <label class="form-check-label" for="fahrenheit">Fahrenheit</label>
                             </div>
@@ -90,15 +90,19 @@
                 weatherType:null,
                 icon:null,
                 isVisibleLoader:true,
-                isVisibleData :false
+                isVisibleData :false,
+                locationValue : '',
+
             }
 
         },
         mounted() {
-
             this.getWeatherUpdate();
+            this.initGoogleMap();
         },
         methods:{
+
+            // get Weather Data against latitude and longitude
             async getWeatherUpdate()
             {
                 var weatherData = {latitude: this.latitude,longitude: this.longitude,measureUnit : this.measureUnit};
@@ -113,11 +117,54 @@
                 this.icon = 'http://openweathermap.org/img/wn/'+this.weatherData.weather[0].icon+'@2x.png';
                 this.isVisibleData = true;
             },
-            changeUnit(event) {
+
+            // Change Unit Method
+            handleChangeUnit(event) {
                 this.measureUnit = event.target.value;
                 this.isVisibleData = false;
                 this.getWeatherUpdate()
-            }
+            },
+
+            // Attach google map autocomplete api
+            initGoogleMap()
+            {
+                const autocomplete = new google.maps.places.Autocomplete(this.$refs["origin"]);
+                autocomplete.addListener("place_changed", () => {
+                    const place = autocomplete.getPlace();
+                    this.latitude =place.geometry.location.lat();
+                    this.longitude =place.geometry.location.lng();
+                    this.locationValue = place.formatted_address
+                    this.isVisibleData = false;
+                    this.getWeatherUpdate();
+                })
+            },
+
+            // Handle Reset Button Click
+            handleResetButtonClick()
+            {
+                this.latitude = this.currentLatitude;
+                this.longitude = this.currentLongitude;
+                this.measureUnit = 'metric';
+                this.isVisibleData = false;
+                this.locationValue = '';
+                this.measureUnit = 'metric';
+                this.getWeatherUpdate();
+            },
+
+            // Handle Location Search Box
+
+             handleInputSearchBox(event)
+             {
+                 if(!event.target.value)
+                 {
+                     this.latitude = this.currentLatitude;
+                     this.longitude = this.currentLongitude;
+                     this.locationValue = '';
+                     this.isVisibleData = false;
+                     this.getWeatherUpdate()
+                 }
+
+             }
         }
     }
 </script>

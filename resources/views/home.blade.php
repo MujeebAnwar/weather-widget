@@ -23,7 +23,7 @@
     </div>
     </body>
 {{--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>--}}
-{{--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAItWlkhk_29WuGZ5udToIdprKNm77t7JQ&callback=initMap&libraries=places&v=weekly&channel=2" async></script>--}}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAItWlkhk_29WuGZ5udToIdprKNm77t7JQ&libraries=places&v=weekly&channel=2" ></script>
 {{--    <script src="{{asset('assets/js/weather.js')}}"></script>--}}
 
     <script src="{{asset('js/app.js')}}"></script>
