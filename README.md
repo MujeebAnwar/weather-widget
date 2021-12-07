@@ -5,7 +5,7 @@ This is Weather Widget That's tell you about your current location weather or yo
 ## Prerequisite
 * Php 8.0
 * Composer (Download composer https://getcomposer.org/download/)
-
+* Node Lts (Download Node https://nodejs.org/en/)
 ## Installation
 
 * Clone this project from github (https://github.com/MujeebAnwar/weather-widget)
@@ -13,5 +13,6 @@ This is Weather Widget That's tell you about your current location weather or yo
 * Open the console and cd your project root directory
 * Run composer install
 * Run `php artisan key:generate`
-* Run `php artisan migrate`
+* Run `npm install` 
+* Run `npm run dev`
 * Run `php artisan serve` (for development)
